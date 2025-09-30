@@ -5,28 +5,8 @@ Il combine OCR, reconnaissance faciale et détection de vivacité afin de vérif
 
 🎯 Objectif
 
-Capturer des signaux cognitifs et comportementaux pendant la saisie d’un formulaire
-Simuler des profils réalistes (fraudeurs, hésitants, automatisés…)
-Extraire des features interprétables
-Entraîner un modèle XGBoost robuste
-Déclencher des alertes en temps réel
-🧠 Signaux comportementaux capturés
-
-⏱️ Temps de focus par champ
-🧭 Ordre de navigation
-🖱️ Mouvements de souris, clics, scrolls
-⌨️ Touches pressées (Tab, Enter, Delete)
-📋 Copier/coller
-🧠 Vitesse de remplissage et délai avant soumission
-🛠️ Architecture technique
-
-Composant	Description
-formulaire.html	Formulaire KYC avec champs classiques et upload de justificatifs
-tracking.js	Script de capture comportementale en temps réel
-app.py	Backend Flask avec endpoints /api/save et /api/predict
-feature_extractor.py	Extraction de features interprétables à partir des signaux bruts
-database.py	Base SQLite avec tables sessions, fields, clicks, mouse_movements
-generate_cases.py	Générateur de profils cognitifs simulés (10 types de comportements)
-build_training_dataset.py	Fusion des features extraites avec les labels métier pour créer le dataset d'entraînement
-train_xgboost.py	Entraînement du modèle XGBoost + validation croisée + interprétabilité
-kyc_fraud_demo.py	Interface Streamlit pour tester le modèle et visualiser les prédictions
+Extraire automatiquement les informations clés des documents officiels (CNI, passeport, permis) via OCR
+Vérifier l’identité de l’utilisateur grâce à la reconnaissance faciale et au contrôle de vivacité
+Détecter les incohérences entre document et utilisateur (matching identité / photo)
+Mettre en place un contrôle qualité d’image (netteté, luminosité, falsification)
+Orchestrer les étapes du workflow KYC avec n8n pour une intégration fluide aux systèmes internes
