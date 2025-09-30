@@ -1,0 +1,17 @@
+{
+  "name": "stage",
+  "version": "1.0.0",
+  "description": "L'application KYC utilisait Face++ pour comparer un selfie avec une image uploadée, mais **ne validait pas si l'image était réellement une pièce d'identité officielle**. Les utilisateurs pouvaient uploader n'importe quelle photo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "n8n": "^1.108.1",
+    "sqlite3": "^5.1.7"
+  }
+}

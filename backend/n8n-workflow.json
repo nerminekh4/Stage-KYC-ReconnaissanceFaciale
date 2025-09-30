@@ -1,0 +1,86 @@
+{
+    "name": "KYC Verification",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "kyc-verification",
+          "method": "POST",
+          "responseMode": "lastNode",
+          "options": {}
+        },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [
+          250,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "functionCode": "\n                const { firstName, lastName, imageBase64, email, address } = items[0].json;\n\n                return [{\n                  json: {\n                    prompt: `Compare cette image d'identit\u00e9 \u00e0 ces infos: pr\u00e9nom ${firstName}, nom ${lastName}, adresse ${address}. L'image est encod\u00e9e en base64. R\u00e9ponds \"accepted\" ou \"rejected\".`,\n                    image: imageBase64\n                  }\n                }];\n                "
+        },
+        "name": "Build Prompt",
+        "type": "n8n-nodes-base.function",
+        "typeVersion": 1,
+        "position": [
+          500,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "authentication": "none",
+          "url": "https://api.openai.com/v1/chat/completions",
+          "method": "POST",
+          "responseFormat": "json",
+          "jsonParameters": true,
+          "options": {},
+          "bodyParametersJson": "{\"model\": \"gpt-4-vision-preview\", \"messages\": [{\"role\": \"system\", \"content\": \"Tu es un assistant de v\\u00e9rification KYC.\"}, {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"{{ $json[\\\"prompt\\\"] }}\"}, {\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64,{{ $json[\\\"image\\\"] }}\"}}]}], \"max_tokens\": 100}"
+        },
+        "name": "GPT-4 Vision",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 1,
+        "position": [
+          750,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "functionCode": "\n                const content = items[0].json.choices[0].message.content.toLowerCase();\n\n                return [{\n                    json: {\n                        status: content.includes('accepted') ? 'accepted' : 'rejected'\n                    }\n                }];\n                "
+        },
+        "name": "Check Status",
+        "type": "n8n-nodes-base.function",
+        "typeVersion": 1,
+        "position": [
+          1000,
+          300
+        ]
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            "Build Prompt"
+          ]
+        ]
+      },
+      "Build Prompt": {
+        "main": [
+          [
+            "GPT-4 Vision"
+          ]
+        ]
+      },
+      "GPT-4 Vision": {
+        "main": [
+          [
+            "Check Status"
+          ]
+        ]
+      }
+    },
+    "active": false
+  }
